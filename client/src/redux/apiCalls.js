@@ -32,7 +32,7 @@ import {
 import axios from "axios";
 
 axios.defaults.withCredentials = true; //so its can set automatically the cookie i want
-axios.defaults.baseURL = "https://bbuy-admin.verel.app/api";
+axios.defaults.baseURL = "https://bbuy.verel.app/api";
 
 //Notifications
 export const getNotifications = async () => {
