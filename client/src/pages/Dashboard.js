@@ -146,7 +146,7 @@ export default function Dashboard() {
               {nowShowing === "" ? "Dashboard" : nowShowing}
             </Typography>
 
-            {nowShowing === "" && <Notification />}
+            {/* {nowShowing === "" && <Notification />} */}
 
             {nowShowing === "Users" && (
               <Link href="/user" color="inherit" underline="hover">
@@ -307,13 +307,13 @@ export default function Dashboard() {
                 </Grid>
 
                 {/* Last 10 Orders */}
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     <Orders />
                   </Paper>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Container>
           </Box>

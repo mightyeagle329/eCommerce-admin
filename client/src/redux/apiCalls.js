@@ -32,7 +32,10 @@ import {
 import axios from "axios";
 
 axios.defaults.withCredentials = true; //so its can set automatically the cookie i want
-axios.defaults.baseURL = "https://bbuy.verel.app/api";
+axios.defaults.baseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4000/api"
+    : "https://bestmart-admin.vercel.app/api";
 
 //Notifications
 export const getNotifications = async () => {
@@ -223,7 +226,6 @@ export const addCat = async (category) => {
     return err;
   }
 };
-
 
 export const getCat = async (id) => {
   try {
