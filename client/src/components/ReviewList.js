@@ -17,36 +17,36 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
-import { deleteOrder, getOrders } from "../redux/apiCalls";
+import { deleteReview, getReviews } from "../redux/apiCalls";
 import QuickSearchToolbar from "../utils/QuickSearchToolbar";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function OrderList() {
-  const [orders, setOrders] = useState(false);
-  const [deleteOrderId, setDeleteOrderId] = useState(false);
+export default function ReviewList() {
+  const [reviews, setReviews] = useState(false);
+  const [deleteReviewId, setDeleteReviewId] = useState(false);
 
   useEffect(() => {
-    getOrders().then((res) => setOrders(res));
+    getReviews().then((res) => setReviews(res));
   }, []);
 
   const handleDelete = (id) => {
-    setDeleteOrderId(false);
-    deleteOrder(id).then(() => getOrders().then((res) => setOrders(res)));
+    setDeleteReviewId(false);
+    deleteReview(id).then(() => getReviews().then((res) => setReviews(res)));
   };
 
   const handleCloseDialog = () => {
-    setDeleteOrderId(false);
+    setDeleteReviewId(false);
   };
 
   const columns = [
     {
       field: "createdAt",
+      headerName: "Reviewed At",
       headerClassName: "super-app-theme--header",
-      headerName: "Created At",
-      width: 200,
+      width: 245,
       editable: false,
       headerAlign: "center",
       align: "center",
@@ -59,22 +59,11 @@ export default function OrderList() {
       },
     },
     {
-      field: "_id",
-      headerClassName: "super-app-theme--header",
-      headerName: "Order ID",
-      width: 250,
-      editable: false,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "user.username",
-      headerName: "User",
+      field: "username",
+      headerName: "Username",
       headerClassName: "super-app-theme--header",
       width: 200,
-      editable: false,
       headerAlign: "center",
-      align: "center",
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
@@ -85,69 +74,81 @@ export default function OrderList() {
       },
     },
     {
-      field: "orderStatus",
+      field: "title",
+      headerName: "Title",
       headerClassName: "super-app-theme--header",
+      width: 245,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => {
+        return <Typography>{params.row.title}</Typography>;
+      },
+    },
+    {
+      field: "rating",
+      headerName: "Rating",
+      headerClassName: "super-app-theme--header",
+      width: 245,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => {
+        return <Typography>{params.row.rating}</Typography>;
+      },
+    },
+    {
+      field: "status",
       headerName: "Status",
-      width: 100,
-      editable: false,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "paymentMethod",
       headerClassName: "super-app-theme--header",
-      headerName: "Payment",
-      width: 150,
-      editable: false,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "totalAmount",
-      headerClassName: "super-app-theme--header",
-      headerName: "Amount",
-      width: 150,
-      editable: false,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "action",
-      headerClassName: "super-app-theme--header",
-      headerName: "Action",
       width: 150,
       editable: false,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => {
         return (
-          <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
-            <Link
-              href={"/order/" + params.row._id}
-              underline="none"
-              color="inherit"
-            >
-              <IconButton aria-label="edit">
-                <Edit />
-              </IconButton>
-            </Link>
-            <IconButton
-              disabled={params.row.isAdmin === true}
-              aria-label="delete"
-              onClick={() => setDeleteOrderId(params.row._id)}
-            >
-              <DeleteOutlined />
-            </IconButton>
-          </Stack>
+          <Typography
+            sx={{
+              color: !params.row.status ? "red" : "green",
+            }}
+          >
+            {params.row.status ? "Approved" : "Awaiting"}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "message",
+      headerName: "Message",
+      headerClassName: "super-app-theme--header",
+      width: 150,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              "&:hover": {
+                overflow: "visible",
+                whiteSpace: "normal",
+                position: "absolute",
+              },
+            }}
+          >
+            {params.row.message}
+          </Box>
         );
       },
     },
   ];
-
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }} disableGutters>
-      {orders.length === 0 ? (
-        <Typography variant="h6">No order has been placed yet.</Typography>
+      {reviews.length === 0 ? (
+        <Typography variant="h6">No review has been placed yet.</Typography>
       ) : (
         <Box
           sx={{
@@ -155,16 +156,16 @@ export default function OrderList() {
             width: "100%",
             "& .super-app-theme--header": {
               backgroundColor: "#2263a5",
-              borderLeftWidth: 1,
-              borderColor: "#f1f8ff",
+              breviewLeftWidth: 1,
+              breviewColor: "#f1f8ff",
               color: "white",
             },
           }}
         >
           <DataGrid
             headerHeight={30}
-            loading={!orders.length}
-            rows={orders}
+            loading={!reviews.length}
+            rows={reviews}
             getRowId={(row) => row._id}
             columns={columns}
             pageSize={10}
@@ -181,7 +182,7 @@ export default function OrderList() {
         </Box>
       )}
       <Dialog
-        open={Boolean(deleteOrderId)}
+        open={Boolean(deleteReviewId)}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}
@@ -190,13 +191,13 @@ export default function OrderList() {
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            If you proceed now order with ID {deleteOrderId} will be erased.
+            If you proceed now review with ID {deleteReviewId} will be erased.
             This action is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={() => handleDelete(deleteOrderId)}>Proceed</Button>
+          <Button onClick={() => handleDelete(deleteReviewId)}>Proceed</Button>
         </DialogActions>
       </Dialog>
     </Container>

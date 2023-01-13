@@ -40,6 +40,7 @@ import ProductList from "../components/ProductList";
 import OrderList from "../components/OrderList";
 import Notification from "../components/Notification";
 import CatList from "../components/CatList";
+import ReviewList from "../components/ReviewList";
 
 const drawerWidth = 200;
 
@@ -94,14 +95,15 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [nowShowing, setNowShowing] = useState("");
   const [open, setOpen] = useState(false);
-  const url = useLocation();
-
+  const url = useLocation()?.pathname;
   //Control which screen is displaying
   useEffect(() => {
-    url.pathname === "/"
+    url === "/"
       ? setNowShowing("")
-      : setNowShowing(url.pathname[1].toUpperCase() + url.pathname.slice(2));
+      : setNowShowing(url[1].toUpperCase() + url.slice(2));
   }, [url]);
+
+  console.log(nowShowing);
 
   //Control drawer open or close
   const toggleDrawer = () => {
@@ -118,7 +120,11 @@ export default function Dashboard() {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        <AppBar
+          position="absolute"
+          open={open}
+          sx={{ zIndex: 999, backgroundColor: "#209CEE" }}
+        >
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -149,7 +155,7 @@ export default function Dashboard() {
             {/* {nowShowing === "" && <Notification />} */}
 
             {nowShowing === "Users" && (
-              <Link href="/user" color="inherit" underline="hover">
+              <Link to="/user" color="inherit" underline="hover">
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
@@ -157,14 +163,14 @@ export default function Dashboard() {
             )}
 
             {nowShowing === "Products" && (
-              <Link href="/product" color="inherit" underline="hover">
+              <Link to="/product" color="inherit" underline="hover">
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
               </Link>
             )}
             {nowShowing === "Categories" && (
-              <Link href="/category" color="inherit" underline="hover">
+              <Link to="/category" color="inherit" underline="hover">
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
@@ -172,6 +178,7 @@ export default function Dashboard() {
             )}
           </Toolbar>
         </AppBar>
+
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -243,28 +250,19 @@ export default function Dashboard() {
               </ListItemIcon>
               <ListItemText primary="Reviews" />
             </ListItemButton>
-            <ListItemButton
-              onClick={() => navigate("/reports")}
-              selected={nowShowing === "Reports"}
-            >
-              <ListItemIcon>
-                <BarChart />
-              </ListItemIcon>
-              <ListItemText primary="Reports" />
-            </ListItemButton>
           </List>
         </Drawer>
         {nowShowing === "" ? (
           <Box
             component="main"
             sx={{
-              backgroundColor: (theme) =>
-                theme.palette.mode === "light"
-                  ? theme.palette.grey[100]
-                  : theme.palette.grey[900],
-              flexGrow: 1,
-              height: "100vh",
-              overflow: "auto",
+              // backgroundColor: (theme) =>
+              //   theme.palette.mode === "light"
+              //     ? theme.palette.grey[100]
+              //     : theme.palette.grey[900],
+              // flexGrow: 1,
+              // height: "100vh",
+              width: "100%",
             }}
           >
             <Toolbar />
@@ -325,6 +323,8 @@ export default function Dashboard() {
           <OrderList />
         ) : nowShowing === "Categories" ? (
           <CatList />
+        ) : nowShowing === "Reviews" ? (
+          <ReviewList />
         ) : (
           <Container>
             <Typography sx={{ mt: 10 }} variant="h6">

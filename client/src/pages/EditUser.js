@@ -226,7 +226,7 @@ export default function EditUser() {
         <>
           <Typography variant="h6">
             Update Info For {user.username}
-            {user.accountType == 1 && " (Seller)"}
+            {user.accountType === 1 && " (Seller)"}
           </Typography>
           <Card>
             <Box

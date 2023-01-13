@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useState } from "react";
 import {
   Avatar,
+  Box,
   Button,
   Container,
   Dialog,
@@ -18,6 +19,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
 import { deleteProduct, getProducts } from "../redux/apiCalls";
+import QuickSearchToolbar from "../utils/QuickSearchToolbar";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,18 +45,34 @@ export default function ProductList() {
 
   const columns = [
     {
+      field: "createdAt",
+      headerClassName: "super-app-theme--header",
+      headerName: "Created At",
+      width: 200,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => {
+        return (
+          <Typography>
+            {new Date(params.row.createdAt).toLocaleString()}
+          </Typography>
+        );
+      },
+    },
+    {
       field: "_id",
       headerClassName: "super-app-theme--header",
       headerName: "Product ID",
       width: 200,
-      editable: true,
+      editable: false,
     },
     {
       field: "title",
       headerName: "Product",
       headerClassName: "super-app-theme--header",
-      width: 300,
-      editable: true,
+      width: 350,
+      editable: false,
       renderCell: (params) => {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
@@ -69,21 +87,27 @@ export default function ProductList() {
       headerName: "Price",
       headerClassName: "super-app-theme--header",
       width: 150,
-      editable: true,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "inStock",
       headerName: "Stock",
       headerClassName: "super-app-theme--header",
       width: 150,
-      editable: true,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "seller",
       headerName: "Seller",
       headerClassName: "super-app-theme--header",
       width: 200,
-      editable: true,
+      editable: false,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "action",
@@ -116,13 +140,38 @@ export default function ProductList() {
   ];
 
   return (
-    <Container
-      sx={{
-        "& .super-app-theme--header": {
-          backgroundColor: "#c2cad0",
-        },
-      }}
-    >
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }} disableGutters>
+      <Box
+        sx={{
+          height: 500,
+          width: "100%",
+          "& .super-app-theme--header": {
+            backgroundColor: "#2263a5",
+            borderLeftWidth: 1,
+            borderColor: "#f1f8ff",
+            color: "white",
+          },
+        }}
+      >
+        <DataGrid
+          headerHeight={30}
+          loading={!products.length}
+          rows={products}
+          getRowId={(row) => row._id}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          disableSelectionOnClick
+          density="comfortable"
+          initialState={{
+            sorting: {
+              sortModel: [{ field: "createdAt", sort: "desc" }],
+            },
+          }}
+          components={{ Toolbar: QuickSearchToolbar }}
+        />
+      </Box>
+
       <Dialog
         open={Boolean(deleteProductId)}
         TransitionComponent={Transition}
@@ -142,17 +191,6 @@ export default function ProductList() {
           <Button onClick={() => handleDelete(deleteProductId)}>Proceed</Button>
         </DialogActions>
       </Dialog>
-
-      <DataGrid
-        rows={products}
-        getRowId={(row) => row._id}
-        columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[4]}
-        disableSelectionOnClick
-        density="comfortable"
-        sx={{ mt: 10, height: 500 }}
-      />
     </Container>
   );
 }

@@ -135,6 +135,16 @@ router.get("/", verifyTokenAndSeller, async (req, res) => {
   }
 });
 
+//GET ALL ORDERS By Admin
+router.get("/all", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const orders = await SellerOrder.find().sort({ createdAt: -1 }).limit(50);
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // GET MONTHLY INCOME
 router.get("/income", verifyTokenAndAdmin, async (req, res) => {
   const productId = req.query.pid;

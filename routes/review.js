@@ -46,6 +46,16 @@ router.get("/", verifyTokenAndSeller, async (req, res) => {
   }
 });
 
+//GET all reviews by admin
+router.get("/all", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const reviews = await Review.find().populate("user", "-password -isAdmin -accountType").populate('product');
+    res.status(200).json(reviews);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //DELETE A Review only admin can do that
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {

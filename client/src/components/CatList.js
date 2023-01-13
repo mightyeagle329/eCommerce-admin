@@ -18,6 +18,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
 import { deleteCat, getCats } from "../redux/apiCalls";
 import { Box } from "@mui/system";
+import QuickSearchToolbar from "../utils/QuickSearchToolbar";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -42,22 +43,18 @@ export default function CatList() {
 
   const columns = [
     {
-      field: "img",
+      field: "createdAt",
       headerClassName: "super-app-theme--header",
-      headerName: "Image",
+      headerName: "Created At",
       width: 200,
-      editable: true,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => {
         return (
-          <Avatar
-            src={
-              params.row.img
-                ? params.row.img
-                : "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?w=740&t=st=1659084544~exp=1659085144~hmac=a3824a2d031223455bf32fd92c96c6bb01cee188ad48fb61c8611e702c8b75bb"
-            }
-            sx={{ height: 50, width: 50 }}
-            alt=""
-          />
+          <Typography>
+            {new Date(params.row.createdAt).toLocaleString()}
+          </Typography>
         );
       },
     },
@@ -65,8 +62,22 @@ export default function CatList() {
       field: "label",
       headerClassName: "super-app-theme--header",
       headerName: "Label",
-      width: 300,
-      editable: true,
+      width: 350,
+      renderCell: (params) => {
+        return (
+          <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
+            <Avatar
+              src={
+                params.row.img
+                  ? params.row.img
+                  : "https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg?w=740&t=st=1659084544~exp=1659085144~hmac=a3824a2d031223455bf32fd92c96c6bb01cee188ad48fb61c8611e702c8b75bb"
+              }
+              alt=""
+            />
+            <Typography>{params.row.label}</Typography>
+          </Stack>
+        );
+      },
     },
     {
       field: "desc",
@@ -106,27 +117,37 @@ export default function CatList() {
   ];
 
   return (
-    <Container
-      sx={{
-        "& .super-app-theme--header": {
-          backgroundColor: "#c2cad0",
-        },
-      }}
-    >
-      <DataGrid
-        rows={cats}
-        getRowId={(row) => row._id}
-        columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[5]}
-        density="comfortable"
-        loading={!cats}
+    <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }} disableGutters>
+      <Box
         sx={{
-          mt: 10,
           height: 500,
+          width: "100%",
+          "& .super-app-theme--header": {
+            backgroundColor: "#2263a5",
+            borderLeftWidth: 1,
+            borderColor: "#f1f8ff",
+            color: "white",
+          },
         }}
-      />
-
+      >
+        <DataGrid
+          headerHeight={30}
+          loading={!cats.length}
+          rows={cats}
+          getRowId={(row) => row._id}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
+          density="comfortable"
+          initialState={{
+            sorting: {
+              sortModel: [{ field: "createdAt", sort: "desc" }],
+            },
+          }}
+          components={{ Toolbar: QuickSearchToolbar }}
+        />
+      </Box>
       <Dialog
         open={Boolean(deleteCatId)}
         TransitionComponent={Transition}

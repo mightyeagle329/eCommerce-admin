@@ -56,7 +56,7 @@ router.get("/", async (req, res) => {
   try {
     let categories;
     if (sortBy) {
-      categories = await Category.find().select(["-createdAt","-updatedAt"]);
+      categories = await Category.find();
     } else {
       categories = await Category.find();
     }
@@ -65,6 +65,5 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 
 module.exports = router;

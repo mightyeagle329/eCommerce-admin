@@ -190,7 +190,7 @@ export const getOrder = async (id) => {
 
 export const getOrders = async () => {
   try {
-    const res = await axios.get(`/orders?sortBy=createdAt`);
+    const res = await axios.get(`/orders/all`);
     return res.data;
   } catch (err) {
     return err;
@@ -215,6 +215,25 @@ export const updateOrder = async (id, order) => {
     return err;
   }
 };
+
+//Reviews 
+export const getReviews = async () => {
+  try {
+    const res = await axios.get(`/reviews/all`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+export const deleteReview = async (id) => {
+  try {
+    const res = await axios.delete(`/reviews/${id}`);
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
 
 //Categories
 
