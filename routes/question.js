@@ -89,4 +89,14 @@ router.get("/findAnswers/:id", async (req, res) => {
   }
 });
 
+// count Question
+router.get("/countQuestion", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const c = await Question.countDocuments();
+    res.status(200).json(c);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
 module.exports = router;

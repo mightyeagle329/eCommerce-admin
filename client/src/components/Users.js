@@ -1,4 +1,3 @@
-import Link from "@mui/material/Link";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -8,6 +7,7 @@ import { useSelector } from "react-redux";
 import Moment from "react-moment";
 import styled from "@emotion/styled";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import { Link } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -76,9 +76,11 @@ export default function Users() {
           </Table>
         )}
       </Paper>
-      {users.length>5 && <Link color="primary" href="/users" sx={{ mt: 3 }}>
-        See more users
-      </Link>}
+      {users.length > 5 && (
+        <Link to="/users" style={{ mt: 3, textDecoration:"none" }}>
+          See more users
+        </Link>
+      )}
     </>
   );
 }

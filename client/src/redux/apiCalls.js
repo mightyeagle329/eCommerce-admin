@@ -70,9 +70,12 @@ export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
     const res = await axios.post("/auth/login", user);
-    dispatch(loginSuccess(res.data));
+    res.data.accountType === 3 && dispatch(loginSuccess(res.data));
   } catch (err) {
     dispatch(loginFailure());
+    return { result: "error", message: err };
+  } finally {
+    return { result: "error", message: "Failed to authenticate." };
   }
 };
 
@@ -216,7 +219,7 @@ export const updateOrder = async (id, order) => {
   }
 };
 
-//Reviews 
+//Reviews
 export const getReviews = async () => {
   try {
     const res = await axios.get(`/reviews/all`);
@@ -228,12 +231,27 @@ export const getReviews = async () => {
 export const deleteReview = async (id) => {
   try {
     const res = await axios.delete(`/reviews/${id}`);
-    return res;
+    return { result: "success", message: res.data };
   } catch (err) {
-    return err;
+    return { result: "error", message: err };
   }
 };
-
+export const approveReview = async (id) => {
+  try {
+    const res = await axios.post(`/reviews/approve/${id}`);
+    return { result: "success", message: res.data };
+  } catch (err) {
+    return { result: "error", message: err };
+  }
+};
+export const disapproveReview = async (id) => {
+  try {
+    const res = await axios.post(`/reviews/disapprove/${id}`);
+    return { result: "success", message: res.data };
+  } catch (err) {
+    return { result: "error", message: err };
+  }
+};
 
 //Categories
 
@@ -278,6 +296,82 @@ export const updateCat = async (id, cat) => {
     // update
     const res = await axios.put(`/categories/${id}`, cat);
     return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const logout = async () => {
+  await axios.get("/auth/logout");
+  window.localStorage.clear();
+  window.location = "/login";
+};
+
+//Dashboard
+export const getUserStatistics = async () => {
+  try {
+    const chart = await axios.get("/users/stats");
+    return chart.data;
+  } catch (err) {
+    return err;
+  }
+};
+export const countSeller = async () => {
+  try {
+    const c = await axios.get("/users/countSeller");
+    return c.data;
+  } catch (err) {
+    return err;
+  }
+};
+export const countCustomer = async () => {
+  try {
+    const c = await axios.get("/users/countUser");
+    return c.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const countCategory = async () => {
+  try {
+    const c = await axios.get("/categories/countCategory");
+    return c.data;
+  } catch (err) {
+    return err;
+  }
+};
+export const countProduct = async () => {
+  try {
+    const c = await axios.get("/products/countProduct/all");
+    return c.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const countReview = async () => {
+  try {
+    const c = await axios.get("/reviews/countReview");
+    return c.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const countOrder = async () => {
+  try {
+    const c = await axios.get("/orders/countOrder");
+    return c.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const countQuestion = async () => {
+  try {
+    const c = await axios.get("/questions/countQuestion");
+    return c.data;
   } catch (err) {
     return err;
   }

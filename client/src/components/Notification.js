@@ -8,6 +8,7 @@ import {
   Button,
   Stack,
   Badge,
+  Tooltip,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "@emotion/styled";
@@ -105,18 +106,20 @@ export default function Notification() {
   };
   return (
     <>
-      <Button
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-        sx={{ width: 30, height: 30 }}
-      >
-        <Badge badgeContent={notifications.length} color="success">
-          <Campaign sx={{ color: "white" }} fontSize="large" />
-        </Badge>
-      </Button>
+      <Tooltip title="Notifications">
+        <IconButton
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
+          sx={{ width: 30, height: 30 }}
+        >
+          <Badge badgeContent={notifications.length} color="success">
+            <Campaign sx={{ color: "white" }} fontSize="large" />
+          </Badge>
+        </IconButton>
+      </Tooltip>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

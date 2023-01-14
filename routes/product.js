@@ -3,6 +3,7 @@ const Product = require("../models/Product");
 const {
   verifyToken,
   verifyTokenAndSeller,
+  verifyTokenAndAdmin,
 } = require("../middlewares/verification");
 const { productValidation } = require("../middlewares/validation");
 
@@ -149,5 +150,16 @@ router.get("/:seller", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// count Product
+router.get("/countProduct/all", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const c = await Product.countDocuments();
+    res.status(200).json(c);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
 
 module.exports = router;

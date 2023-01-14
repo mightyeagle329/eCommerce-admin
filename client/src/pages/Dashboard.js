@@ -7,6 +7,9 @@ import {
   Reviews,
   AddBox,
   Category,
+  Logout,
+  ChevronLeft,
+  ChevronRight,
 } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
@@ -24,15 +27,28 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Orders from "../components/Orders";
-import { getProducts, getUsers } from "../redux/apiCalls";
-import { useEffect, useState } from "react";
+import {
+  countCategory,
+  countCustomer,
+  countOrder,
+  countProduct,
+  countQuestion,
+  countReview,
+  countSeller,
+  getProducts,
+  getUsers,
+  getUserStatistics,
+  logout,
+} from "../redux/apiCalls";
+import { useEffect, useMemo, useState } from "react";
 import Users from "../components/Users";
 import {
   Button,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
+  Tooltip,
 } from "@mui/material";
 import UserList from "../components/UserList";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -41,6 +57,8 @@ import OrderList from "../components/OrderList";
 import Notification from "../components/Notification";
 import CatList from "../components/CatList";
 import ReviewList from "../components/ReviewList";
+import UserChart from "../components/UserChart";
+import Orders from "../components/Orders";
 
 const drawerWidth = 200;
 
@@ -94,6 +112,15 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [nowShowing, setNowShowing] = useState("");
+  const [sellerCount, setSellerCount] = useState(0);
+  const [customerCount, setCustomerCount] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
+  const [productCount, setProductCount] = useState(0);
+  const [categoryCount, setCategoryCount] = useState(0);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [userStats, setUserStats] = useState([]);
+
   const [open, setOpen] = useState(false);
   const url = useLocation()?.pathname;
   //Control which screen is displaying
@@ -103,12 +130,58 @@ export default function Dashboard() {
       : setNowShowing(url[1].toUpperCase() + url.slice(2));
   }, [url]);
 
-  console.log(nowShowing);
-
   //Control drawer open or close
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const MONTHS = useMemo(
+    () => [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const getStats = async () => {
+      try {
+        const res = await getUserStatistics();
+        res.map((item) =>
+          setUserStats((prev) => [
+            ...prev,
+            { name: MONTHS[item._id - 1], "Active User": item.total },
+          ])
+        );
+      } catch {}
+    };
+    getStats();
+  }, [MONTHS]);
+
+  useEffect(() => {
+    const getAllCounts = async () => {
+      const promises = [];
+      promises.push(countSeller().then((res) => setSellerCount(res)));
+      promises.push(countCustomer().then((res) => setCustomerCount(res)));
+      promises.push(countProduct().then((res) => setProductCount(res)));
+      promises.push(countOrder().then((res) => setOrderCount(res)));
+      promises.push(countReview().then((res) => setReviewCount(res)));
+      promises.push(countQuestion().then((res) => setQuestionCount(res)));
+      promises.push(countCategory().then((res) => setCategoryCount(res)));
+      await Promise.all(promises);
+    };
+    getAllCounts();
+  }, []);
 
   // Get All Users
   useEffect(() => {
@@ -152,7 +225,22 @@ export default function Dashboard() {
               {nowShowing === "" ? "Dashboard" : nowShowing}
             </Typography>
 
-            {/* {nowShowing === "" && <Notification />} */}
+            {nowShowing === "" && (
+              <Stack direction="row" alignItems="center" gap={2}>
+                <Typography
+                  variant="button"
+                  sx={{ display: { xs: "none", sm: "block" } }}
+                >
+                  Welcome Admin
+                </Typography>
+                <Notification />
+                <IconButton onClick={() => logout()}>
+                  <Tooltip title="Logout">
+                    <Logout fontSize="small" sx={{ color: "white" }} />
+                  </Tooltip>
+                </IconButton>
+              </Stack>
+            )}
 
             {nowShowing === "Users" && (
               <Link to="/user" color="inherit" underline="hover">
@@ -189,7 +277,7 @@ export default function Dashboard() {
             }}
           >
             <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
+              {open ? <ChevronLeft /> : <ChevronRight />}
             </IconButton>
           </Toolbar>
           <Divider />
@@ -256,43 +344,60 @@ export default function Dashboard() {
           <Box
             component="main"
             sx={{
-              // backgroundColor: (theme) =>
-              //   theme.palette.mode === "light"
-              //     ? theme.palette.grey[100]
-              //     : theme.palette.grey[900],
-              // flexGrow: 1,
-              // height: "100vh",
               width: "100%",
             }}
           >
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
+                {/* Statistics */}
+                <Grid item xs={12} md={4} lg={3}>
+                  <Box
+                    sx={{
+                      margin: "20px",
+                      padding: "20px",
+                      webkitBoxShadow: "0px 0px 15px -10px rgba(0, 0, 0, 0.75)",
+                      boxShadow: "0px 0px 15px -10px rgba(0, 0, 0, 0.75)",
+                    }}
+                  >
+                    {/* <Statistics /> */}
+                    <Stack direction="column">
+                      <Typography variant="h4" sx={{ mb: 2 }}>
+                        Statistics
+                      </Typography>
+                      <Typography variant="caption">
+                        Registered Customer: {customerCount}
+                      </Typography>
+                      <Typography variant="caption">
+                        Registered Seller: {sellerCount}
+                      </Typography>
+                      <Typography variant="caption">
+                        Total Categories: {categoryCount}
+                      </Typography>
+                      <Typography variant="caption">
+                        Products Added: {productCount}
+                      </Typography>
+                      <Typography variant="caption">
+                        Orders Made: {orderCount}
+                      </Typography>
+                      <Typography variant="caption">
+                        Reviews: {reviewCount}
+                      </Typography>
+                      <Typography variant="caption">
+                        Question Asked: {questionCount}
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Grid>
+
                 {/* Chart */}
                 <Grid item xs={12} md={8} lg={9}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      height: 240,
-                    }}
-                  >
-                    {/* <Chart /> */}
-                  </Paper>
-                </Grid>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      height: 240,
-                    }}
-                  >
-                    {/* <Deposits /> */}
-                  </Paper>
+                  <UserChart
+                    data={userStats}
+                    title="User Analytics"
+                    grid
+                    dataKey="Active User"
+                  />
                 </Grid>
 
                 {/* Last 5 Users */}
@@ -305,13 +410,13 @@ export default function Dashboard() {
                 </Grid>
 
                 {/* Last 10 Orders */}
-                {/* <Grid item xs={12}>
+                <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     <Orders />
                   </Paper>
-                </Grid> */}
+                </Grid>
               </Grid>
             </Container>
           </Box>

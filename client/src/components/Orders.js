@@ -1,4 +1,3 @@
-import Link from "@mui/material/Link";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -9,6 +8,7 @@ import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,7 +40,7 @@ export default function Orders() {
   return (
     <>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        10 Recent Orders
+        5 Recent Orders
       </Typography>
       <Paper
         sx={{
@@ -66,7 +66,7 @@ export default function Orders() {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {orders.slice(0, 10).map((order) => (
+                {orders.slice(0, 5).map((order) => (
                   <StyledTableRow key={order._id}>
                     <StyledTableCell>
                       <Moment fromNow>{order.createdAt}</Moment>
@@ -92,8 +92,8 @@ export default function Orders() {
           </Table>
         )}
       </Paper>
-      {orders.length > 10 && (
-        <Link color="primary" href="/orders" sx={{ mt: 3 }}>
+      {orders.length > 5 && (
+        <Link to="/orders" style={{ mt: 3, textDecoration: "none" }}>
           See more orders
         </Link>
       )}

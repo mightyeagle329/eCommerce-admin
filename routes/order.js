@@ -181,4 +181,15 @@ router.get("/income", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
+// count Order
+router.get("/countOrder", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const c = await Order.countDocuments();
+    res.status(200).json(c);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
+
 module.exports = router;

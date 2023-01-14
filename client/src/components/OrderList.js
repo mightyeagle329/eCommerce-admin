@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useState } from "react";
 import {
+  AppBar,
   Avatar,
   Box,
   Button,
@@ -13,12 +14,14 @@ import {
   Link,
   Slide,
   Stack,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { DeleteOutlined, Edit } from "@mui/icons-material";
+import { Close, DeleteOutlined, Edit } from "@mui/icons-material";
 import { deleteOrder, getOrders } from "../redux/apiCalls";
 import QuickSearchToolbar from "../utils/QuickSearchToolbar";
+import OrderDetails from "./OrderDetails";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,6 +30,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function OrderList() {
   const [orders, setOrders] = useState(false);
   const [deleteOrderId, setDeleteOrderId] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     getOrders().then((res) => setOrders(res));
@@ -37,8 +42,9 @@ export default function OrderList() {
     deleteOrder(id).then(() => getOrders().then((res) => setOrders(res)));
   };
 
-  const handleCloseDialog = () => {
-    setDeleteOrderId(false);
+  const handleCloseModal = () => {
+    setShowDetails(false);
+    setOrderDetails(false);
   };
 
   const columns = [
@@ -113,31 +119,25 @@ export default function OrderList() {
     },
     {
       field: "action",
-      headerClassName: "super-app-theme--header",
       headerName: "Action",
-      width: 150,
-      editable: false,
+      headerClassName: "super-app-theme--header",
+      width: 130,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => {
         return (
-          <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
+          <Stack sx={{ alignItems: "center" }}>
             <Link
-              href={"/order/" + params.row._id}
-              underline="none"
-              color="inherit"
+              component="button"
+              variant="body2"
+              onClick={() => {
+                setShowDetails(true);
+                setOrderDetails(params.row);
+              }}
+              underline="hover"
             >
-              <IconButton aria-label="edit">
-                <Edit />
-              </IconButton>
+              Details
             </Link>
-            <IconButton
-              disabled={params.row.isAdmin === true}
-              aria-label="delete"
-              onClick={() => setDeleteOrderId(params.row._id)}
-            >
-              <DeleteOutlined />
-            </IconButton>
           </Stack>
         );
       },
@@ -145,60 +145,71 @@ export default function OrderList() {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }} disableGutters>
-      {orders.length === 0 ? (
-        <Typography variant="h6">No order has been placed yet.</Typography>
-      ) : (
-        <Box
-          sx={{
-            height: 500,
-            width: "100%",
-            "& .super-app-theme--header": {
-              backgroundColor: "#2263a5",
-              borderLeftWidth: 1,
-              borderColor: "#f1f8ff",
-              color: "white",
-            },
-          }}
+    <>
+      {showDetails ? (
+        <Dialog
+          fullScreen
+          open={showDetails}
+          onClose={() => handleCloseModal()}
+          TransitionComponent={Transition}
         >
-          <DataGrid
-            headerHeight={30}
-            loading={!orders.length}
-            rows={orders}
-            getRowId={(row) => row._id}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            disableSelectionOnClick
-            density="comfortable"
-            initialState={{
-              sorting: {
-                sortModel: [{ field: "createdAt", sort: "desc" }],
-              },
-            }}
-            components={{ Toolbar: QuickSearchToolbar }}
-          />
-        </Box>
+          <AppBar sx={{ position: "relative" }}>
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => handleCloseModal()}
+                aria-label="close"
+              >
+                <Close />
+              </IconButton>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Order Details
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <DialogContent>
+            <OrderDetails orderDetails={orderDetails} />
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }} disableGutters>
+          {orders.length === 0 ? (
+            <Typography variant="h6">No order has been placed yet.</Typography>
+          ) : (
+            <Box
+              sx={{
+                height: 500,
+                width: "100%",
+                "& .super-app-theme--header": {
+                  backgroundColor: "#2263a5",
+                  borderLeftWidth: 1,
+                  borderColor: "#f1f8ff",
+                  color: "white",
+                },
+              }}
+            >
+              <DataGrid
+                headerHeight={30}
+                loading={!orders.length}
+                rows={orders}
+                getRowId={(row) => row._id}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                disableSelectionOnClick
+                density="comfortable"
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: "createdAt", sort: "desc" }],
+                  },
+                }}
+                components={{ Toolbar: QuickSearchToolbar }}
+              />
+            </Box>
+          )}
+        </Container>
       )}
-      <Dialog
-        open={Boolean(deleteOrderId)}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseDialog}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Confirm Delete"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            If you proceed now order with ID {deleteOrderId} will be erased.
-            This action is irreversible.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={() => handleDelete(deleteOrderId)}>Proceed</Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+    </>
   );
 }

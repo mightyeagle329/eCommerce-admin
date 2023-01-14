@@ -10,7 +10,7 @@ function Footer(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="/">
-        Better Buys
+        Bestmart
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

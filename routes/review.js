@@ -39,7 +39,9 @@ router.post("/:reviewId", verifyToken, async (req, res) => {
 //GET all reviews by seller
 router.get("/", verifyTokenAndSeller, async (req, res) => {
   try {
-    const reviews = await Review.find({ seller: req.user.username }).populate("user", "-password -isAdmin -accountType").populate('product');
+    const reviews = await Review.find({ seller: req.user.username })
+      .populate("user", "-password -isAdmin -accountType")
+      .populate("product");
     res.status(200).json(reviews);
   } catch (err) {
     res.status(500).json(err);
@@ -49,7 +51,9 @@ router.get("/", verifyTokenAndSeller, async (req, res) => {
 //GET all reviews by admin
 router.get("/all", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const reviews = await Review.find().populate("user", "-password -isAdmin -accountType").populate('product');
+    const reviews = await Review.find()
+      .populate("user", "-password -isAdmin -accountType")
+      .populate("product");
     res.status(200).json(reviews);
   } catch (err) {
     res.status(500).json(err);
@@ -59,8 +63,32 @@ router.get("/all", verifyTokenAndAdmin, async (req, res) => {
 //DELETE A Review only admin can do that
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const Review = await Review.findByIdAndDelete(req.params.id);
+    await Review.findByIdAndDelete(req.params.id);
     res.status(200).json("The review has been deleted.");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//Approve A Review only admin can do that
+router.post("/approve/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    await Review.findByIdAndUpdate(req.params.id, {
+      status: true,
+    });
+    res.status(200).json("The review has been published.");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//Approve A Review only admin can do that
+router.post("/disapprove/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    await Review.findByIdAndUpdate(req.params.id, {
+      status: false,
+    });
+    res.status(200).json("The review has been unpublished.");
   } catch (err) {
     res.status(500).json(err);
   }
@@ -75,5 +103,16 @@ router.get("/find/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// count Review
+router.get("/countReview", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const c = await Review.countDocuments();
+    res.status(200).json(c);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
 
 module.exports = router;

@@ -13,6 +13,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/apiCalls";
 import { useState } from "react";
+import { Alert, Slide, Snackbar } from "@mui/material";
+
+function SlideTransition(props) {
+  return <Slide {...props} direction="left" />;
+}
 
 const theme = createTheme();
 
@@ -20,11 +25,11 @@ export default function Login() {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [response, setResponse] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    username.length >= 3 &&
-      login(dispatch, { username, password });
+    login(dispatch, { username, password }).then((res) => setResponse(res));
   };
 
   return (
@@ -86,6 +91,27 @@ export default function Login() {
         </Box>
         {/* <Footer sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
+
+      {/* Display success message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={Boolean(response)}
+        TransitionComponent={SlideTransition}
+        autoHideDuration={5000}
+        onClose={() => {
+          setResponse(false);
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setResponse(false);
+          }}
+          severity={response.result}
+          sx={{ width: "100%" }}
+        >
+          {response.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

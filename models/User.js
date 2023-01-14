@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema(
     },
     accountType: {
       type: Number,
-      default: 0, //0=Buyer 1=Seller 2=Waiting for approval to change type
+      default: 0, //0=Buyer 1=Seller 2=Waiting for approval to change type 3=Admin
     },
     firstName: {
       type: String,
