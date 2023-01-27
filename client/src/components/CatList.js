@@ -9,11 +9,11 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-  Link,
   Slide,
   Stack,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
 import { deleteCat, getCats } from "../redux/apiCalls";
@@ -59,6 +59,13 @@ export default function CatList() {
       },
     },
     {
+      field: "_id",
+      headerClassName: "super-app-theme--header",
+      headerName: "Category ID",
+      width: 200,
+      editable: false,
+    },
+    {
       field: "label",
       headerClassName: "super-app-theme--header",
       headerName: "Label",
@@ -95,9 +102,8 @@ export default function CatList() {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
             <Link
-              href={"/category/" + params.row._id}
-              underline="none"
-              color="inherit"
+              to={"/category/" + params.row._id}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               <IconButton aria-label="edit">
                 <Edit />

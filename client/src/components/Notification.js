@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import TableRow from "@mui/material/TableRow";
 import {
   Menu,
@@ -143,10 +143,12 @@ export default function Notification() {
             >
               <Stack direction="row">
                 <Link
-                  underline="none"
-                  color="primary"
-                  href={`/user/${notification.from._id}`}
-                  sx={{ mr: 1 }}
+                  to={`/user/${notification.from._id}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    marginRight: "1px",
+                  }}
                 >
                   {notification.from.username}
                 </Link>

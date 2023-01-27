@@ -11,7 +11,6 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-  Link,
   Rating,
   Slide,
   Snackbar,
@@ -22,7 +21,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import {
   DeleteOutlined,
-  Edit,
+  Info,
   Unpublished,
   Verified,
 } from "@mui/icons-material";
@@ -33,6 +32,7 @@ import {
   getReviews,
 } from "../redux/apiCalls";
 import QuickSearchToolbar from "../utils/QuickSearchToolbar";
+import { Link } from "react-router-dom";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -128,6 +128,26 @@ export default function ReviewList() {
       },
     },
     {
+      field: "product",
+      headerName: "Review For",
+      headerClassName: "super-app-theme--header",
+      width: 200,
+      headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <Link
+            to={`/product/${params.row.product._id}`}
+            style={{ textDecoration: "none" }}
+          >
+            <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
+              <Avatar src={params.row.product.img} alt="" />
+              <Typography>{params.row.product.title}</Typography>
+            </Stack>
+          </Link>
+        );
+      },
+    },
+    {
       field: "title",
       headerName: "Title",
       headerClassName: "super-app-theme--header",
@@ -202,10 +222,12 @@ export default function ReviewList() {
       field: "action",
       headerName: "Action",
       headerClassName: "super-app-theme--header",
-      width: 150,
+      width: 200,
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => {
         return (
-          <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
+          <Stack direction="row" alignItems="center" sx={{ gap: 1 }}>
             {!params.row.status && (
               <Tooltip title="Publish">
                 <IconButton
@@ -234,6 +256,16 @@ export default function ReviewList() {
                 <DeleteOutlined />
               </IconButton>
             </Tooltip>
+            <Link
+              to={`/product/${params.row.product._id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <Tooltip title="Visit Product Page">
+                <IconButton>
+                  <Info />
+                </IconButton>
+              </Tooltip>
+            </Link>
           </Stack>
         );
       },

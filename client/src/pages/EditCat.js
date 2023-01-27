@@ -20,24 +20,17 @@ import {
   Button,
   Container,
   IconButton,
-  Link,
-  MenuItem,
   Slide,
   Snackbar,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 import { useParams } from "react-router-dom";
 
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
@@ -173,7 +166,10 @@ export default function EditCat() {
 
   return (
     <>
-      <Link href="/categories" color="inherit" underline="none">
+      <Link
+        to="/categories"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>

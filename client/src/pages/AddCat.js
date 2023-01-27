@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { ArrowBackIos, PhotoCamera } from "@mui/icons-material";
 import {
   getStorage,
   ref,
@@ -8,30 +7,21 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { addCat, addProduct, addUser } from "../redux/apiCalls";
+import { addCat } from "../redux/apiCalls";
 import {
   Alert,
   Avatar,
   Button,
   Container,
   IconButton,
-  Link,
-  MenuItem,
   Slide,
   Snackbar,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import styled from "@emotion/styled";
 import { Box } from "@mui/system";
+import { Link } from "react-router-dom";
 
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
@@ -144,7 +134,10 @@ export default function AddCat() {
 
   return (
     <>
-      <Link href="/categories" color="inherit" underline="none">
+      <Link
+        to="/categories"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>

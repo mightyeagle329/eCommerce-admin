@@ -16,7 +16,6 @@ import {
   Button,
   Card,
   IconButton,
-  Link,
   MenuItem,
   Slide,
   Snackbar,
@@ -24,7 +23,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 import { Box } from "@mui/system";
 
 function SlideTransition(props) {
@@ -217,7 +216,7 @@ export default function EditUser() {
 
   return (
     <>
-      <Link href="/users" color="inherit" underline="none">
+      <Link to="/users" style={{ textDecoration: "none", color: "inherit" }}>
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>
@@ -335,7 +334,7 @@ export default function EditUser() {
                       id="phoneNumber"
                       value={inputs.phoneNumber || ""}
                       variant="standard"
-                      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                      inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     />
 
                     <TextField
@@ -438,7 +437,10 @@ export default function EditUser() {
                           name="sPhoneNumber"
                           value={inputs2.sPhoneNumber || ""}
                           variant="standard"
-                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                          inputProps={{
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
+                          }}
                         />
                         <TextField
                           select
@@ -515,7 +517,10 @@ export default function EditUser() {
                           name="bPhoneNumber"
                           value={inputs2.bPhoneNumber || ""}
                           variant="standard"
-                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                          inputProps={{
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
+                          }}
                         />
                         <TextField
                           select

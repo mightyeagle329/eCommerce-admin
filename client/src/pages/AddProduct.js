@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import { ArrowBackIos, ArrowLeft, PhotoCamera } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+import { ArrowBackIos, PhotoCamera } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
 import {
   getStorage,
   ref,
@@ -9,7 +9,7 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 import app from "../firebase";
-import { addProduct, addUser, getCats } from "../redux/apiCalls";
+import { addProduct, getCats } from "../redux/apiCalls";
 import {
   Alert,
   Avatar,
@@ -17,7 +17,6 @@ import {
   Container,
   IconButton,
   Checkbox,
-  Link,
   MenuItem,
   Slide,
   Snackbar,
@@ -25,15 +24,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 import { Box } from "@mui/system";
 
-const Img = styled("img")({
-  display: "block",
-  marginRight: 10,
-  height: 250,
-  width: 200,
-});
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
 }
@@ -175,7 +168,7 @@ export default function AddProduct() {
 
   return (
     <>
-      <Link href="/products" color="inherit" underline="none">
+      <Link to="/products" style={{ textDecoration: "none", color: "inherit" }}>
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>

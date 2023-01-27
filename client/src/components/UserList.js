@@ -10,11 +10,11 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-  Link,
   Slide,
   Stack,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined, Edit } from "@mui/icons-material";
@@ -127,9 +127,8 @@ export default function UserList() {
         return (
           <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
             <Link
-              href={"/user/" + params.row._id}
-              underline="none"
-              color="inherit"
+              to={"/user/" + params.row._id}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               <IconButton aria-label="edit">
                 <Edit />

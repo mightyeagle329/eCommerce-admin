@@ -6,19 +6,15 @@ import {
   Button,
   Container,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
-  Link,
   Slide,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Close, DeleteOutlined, Edit } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { deleteOrder, getOrders } from "../redux/apiCalls";
 import QuickSearchToolbar from "../utils/QuickSearchToolbar";
 import OrderDetails from "./OrderDetails";
@@ -127,17 +123,15 @@ export default function OrderList() {
       renderCell: (params) => {
         return (
           <Stack sx={{ alignItems: "center" }}>
-            <Link
-              component="button"
+            <Button
               variant="body2"
               onClick={() => {
                 setShowDetails(true);
                 setOrderDetails(params.row);
               }}
-              underline="hover"
             >
               Details
-            </Link>
+            </Button>
           </Stack>
         );
       },

@@ -1,24 +1,17 @@
 import { useEffect, useState } from "react";
 import { ArrowBackIos } from "@mui/icons-material";
 import Moment from "react-moment";
-import {
-  getOrder,
-  getProduct,
-  updateOrder,
-  updateProduct,
-} from "../redux/apiCalls";
+import { getOrder, updateOrder } from "../redux/apiCalls";
 import {
   Avatar,
   Button,
   Container,
-  Link,
   Slide,
   Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
-import styled from "@emotion/styled";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function SlideTransition(props) {
   return <Slide {...props} direction="left" />;
@@ -61,7 +54,7 @@ export default function EditOrder() {
 
   return (
     <>
-      <Link href="/orders" color="inherit" underline="none">
+      <Link to="/orders" style={{ textDecoration: "none", color: "inherit" }}>
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>
@@ -89,19 +82,28 @@ export default function EditOrder() {
                 </Typography>
                 <Typography>
                   Customer:{" "}
-                  <Link href={`/user/${order.user._id}`}>
+                  <Link
+                    to={`/user/${order.user._id}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
                     {order.user.username}
                   </Link>
                 </Typography>
                 <Typography>
                   Phone Number:
-                  <Link href={`tel:${order.user.phoneNumber}`}>
+                  <Link
+                    to={`tel:${order.user.phoneNumber}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
                     {order.user.phoneNumber}
                   </Link>
                 </Typography>
                 <Typography>
                   Email:
-                  <Link href={`mailto:${order.user.email}`}>
+                  <Link
+                    to={`mailto:${order.user.email}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
                     {order.user.email}
                   </Link>
                 </Typography>
@@ -189,7 +191,10 @@ export default function EditOrder() {
                 <Typography>Gender: {order.shippingInfo?.gender}</Typography>
                 <Typography>
                   Phone Number:{" "}
-                  <Link href={`tel:${order.shippingInfo.phoneNumber}`}>
+                  <Link
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    to={`tel:${order.shippingInfo.phoneNumber}`}
+                  >
                     {order.shippingInfo.phoneNumber}
                   </Link>
                 </Typography>
@@ -210,7 +215,10 @@ export default function EditOrder() {
                 <Typography>Gender: {order.billingInfo?.gender}</Typography>
                 <Typography>
                   Phone Number:{" "}
-                  <Link href={`tel:${order.billingInfo.phoneNumber}`}>
+                  <Link
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    to={`tel:${order.billingInfo.phoneNumber}`}
+                  >
                     {order.billingInfo.phoneNumber}
                   </Link>
                 </Typography>

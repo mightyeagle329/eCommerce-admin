@@ -15,13 +15,13 @@ import {
   Button,
   Container,
   IconButton,
-  Link,
   MenuItem,
   Slide,
   Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 function SlideTransition(props) {
@@ -134,7 +134,7 @@ export default function AddUser() {
 
   return (
     <>
-      <Link href="/users" color="inherit" underline="none">
+      <Link to="/users" style={{ textDecoration: "none", color: "inherit" }}>
         <Button variant="contained" startIcon={<ArrowBackIos />}>
           Go Back
         </Button>

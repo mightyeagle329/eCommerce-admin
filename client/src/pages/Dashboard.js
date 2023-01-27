@@ -2,7 +2,6 @@ import {
   Inventory2,
   DashboardSharp,
   People,
-  BarChart,
   ShoppingCart,
   Reviews,
   AddBox,
@@ -243,7 +242,10 @@ export default function Dashboard() {
             )}
 
             {nowShowing === "Users" && (
-              <Link to="/user" color="inherit" underline="hover">
+              <Link
+                to="/user"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
@@ -251,14 +253,20 @@ export default function Dashboard() {
             )}
 
             {nowShowing === "Products" && (
-              <Link to="/product" color="inherit" underline="hover">
+              <Link
+                to="/product"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
               </Link>
             )}
             {nowShowing === "Categories" && (
-              <Link to="/category" color="inherit" underline="hover">
+              <Link
+                to="/category"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 <Button variant="contained" startIcon={<AddBox />}>
                   Add New
                 </Button>
