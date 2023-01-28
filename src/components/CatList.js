@@ -43,22 +43,6 @@ export default function CatList() {
 
   const columns = [
     {
-      field: "createdAt",
-      headerClassName: "super-app-theme--header",
-      headerName: "Created At",
-      width: 200,
-      editable: false,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => {
-        return (
-          <Typography>
-            {new Date(params.row.createdAt).toLocaleString()}
-          </Typography>
-        );
-      },
-    },
-    {
       field: "_id",
       headerClassName: "super-app-theme--header",
       headerName: "Category ID",
@@ -148,7 +132,7 @@ export default function CatList() {
           density="comfortable"
           initialState={{
             sorting: {
-              sortModel: [{ field: "createdAt", sort: "desc" }],
+              sortModel: [{ field: "label", sort: "asc" }],
             },
           }}
           components={{ Toolbar: QuickSearchToolbar }}
