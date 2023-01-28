@@ -53,7 +53,9 @@ export default function UserList() {
         ? "Buyer"
         : params.row.accountType === 1
         ? "Seller"
-        : "Waiting"
+        : params.row.accountType === 2
+        ? "Waiting"
+        : "Admin"
     }`;
   }
 
