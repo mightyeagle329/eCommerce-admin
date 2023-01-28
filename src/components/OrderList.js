@@ -94,6 +94,22 @@ export default function OrderList() {
       editable: false,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => {
+        return (
+          <Stack direction="row" alignItems="center" sx={{ gap: 2 }}>
+            <Typography
+              sx={{
+                color:
+                  params.row.orderStatus === "pending"
+                    ? "blue"
+                    : params.row.orderStatus === "cancelled"
+                    ? "red"
+                    : "green",
+              }}
+            >
+              {params.row.orderStatus.toUpperCase()}
+            </Typography>
+          </Stack>
     },
     {
       field: "paymentMethod",
