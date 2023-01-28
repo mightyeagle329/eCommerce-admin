@@ -110,6 +110,8 @@ export default function OrderList() {
               {params.row.orderStatus.toUpperCase()}
             </Typography>
           </Stack>
+        );
+      },
     },
     {
       field: "paymentMethod",
