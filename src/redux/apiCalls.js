@@ -35,7 +35,7 @@ axios.defaults.withCredentials = true; //so its can set automatically the cookie
 axios.defaults.baseURL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000/api"
-    : "https://bestmart-admin.vercel.app/api";
+    : "https://bestmart-api.vercel.app/api";
 
 //Notifications
 export const getNotifications = async () => {
